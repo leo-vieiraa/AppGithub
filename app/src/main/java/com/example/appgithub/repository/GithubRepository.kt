@@ -1,7 +1,6 @@
 package com.example.appgithub.repository
 
 import android.content.Context
-import com.example.appgithub.model.Repo
 import com.example.appgithub.model.RepoResponse
 import com.example.appgithub.service.RetrofitService
 import retrofit2.Call

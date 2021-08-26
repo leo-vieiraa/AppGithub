@@ -15,7 +15,7 @@ class RepoListViewModel : ViewModel() {
     val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
-    private fun fetchAllFromServer(context: Context) {
+    fun fetchAllFromServer(context: Context) {
         val repository = GithubRepository(context)
 
         repository.fetchAll { response, error ->
