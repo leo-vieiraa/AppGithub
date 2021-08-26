@@ -20,5 +20,7 @@ data class Repo (
 }
 
 data class RepoResponse (
+
+    @SerializedName("items")
     val results : List<Repo>
         )
