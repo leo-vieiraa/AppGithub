@@ -32,9 +32,9 @@ class GithubRepository (private val context: Context){
 
     }
 
-    fun fetchPullRequest(onComplete: (List<PullRequest>?, String?) -> Unit) {
+    fun fetchPullRequest(url: String, onComplete: (List<PullRequest>?, String?) -> Unit) {
 
-        val call = service.getPullRequest()
+        val call = service.getPullRequest(url)
 
         call.enqueue(object : Callback<List<PullRequest>> {
 

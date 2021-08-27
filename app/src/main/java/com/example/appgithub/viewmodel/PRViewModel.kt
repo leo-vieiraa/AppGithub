@@ -16,10 +16,10 @@ class PRViewModel : ViewModel() {
     val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
-    fun fetchPullRequest(context: Context) {
+    fun fetchPullRequest(url: String, context: Context) {
         val repository = GithubRepository(context)
 
-        repository.fetchPullRequest() { response, error ->
+        repository.fetchPullRequest(url) { response, error ->
             response?.apply {
                 _pullRequest.value = this
             }

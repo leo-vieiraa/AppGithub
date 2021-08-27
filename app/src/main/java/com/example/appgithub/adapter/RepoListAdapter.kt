@@ -7,11 +7,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.appgithub.R
 import com.example.appgithub.databinding.RepoItemFragmentBinding
-import com.example.appgithub.interfaces.ClickableItem
 import com.example.appgithub.model.Repo
 
 class RepoListAdapter(
-    val interfaceClick: ClickableItem
+
+    val closureClick: (Repo) -> Unit
+
 ) : RecyclerView.Adapter<RepoListViewHolder>(){
 
     private val repoList = mutableListOf<Repo>()
@@ -26,7 +27,8 @@ class RepoListAdapter(
             holder.bind(this)
         }
         holder.itemView.setOnClickListener {
-            interfaceClick.onClickGoToDetail(repoList[position])
+//            interfaceClick.onClickGoToDetail(repoList[position])
+            closureClick(repoList[position])
         }
     }
 

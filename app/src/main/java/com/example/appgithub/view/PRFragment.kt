@@ -38,9 +38,10 @@ class PRFragment : Fragment(R.layout.pr_fragment) {
         viewModel = ViewModelProvider(this).get(PRViewModel::class.java)
         viewModel.pullRequest.observe(viewLifecycleOwner, observerPullRequest)
 
-//        val arguments = arguments?.getSerializable("repo") as Repo
+        val arguments = arguments?.getSerializable("repo") as Repo
+        val url = arguments.pullsUrl.replace("https://api.github.com", "").replace("{/number}", "")
 
-        viewModel.fetchPullRequest(requireContext())
+        viewModel.fetchPullRequest(url, requireContext())
 
     }
 
