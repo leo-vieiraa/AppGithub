@@ -1,6 +1,7 @@
 package com.example.appgithub.repository
 
 import android.content.Context
+import com.example.appgithub.model.PullRequest
 import com.example.appgithub.model.RepoResponse
 import com.example.appgithub.service.RetrofitService
 import retrofit2.Call
@@ -25,6 +26,27 @@ class GithubRepository (private val context: Context){
             }
 
             override fun onFailure(call: Call<RepoResponse>, t: Throwable) {
+                onComplete(null, t.message)
+            }
+        })
+
+    }
+
+    fun fetchPullRequest(onComplete: (List<PullRequest>?, String?) -> Unit) {
+
+        val call = service.getPullRequest()
+
+        call.enqueue(object : Callback<List<PullRequest>> {
+
+            override fun onResponse(call: Call<List<PullRequest>>, response: Response<List<PullRequest>>) {
+                if (response.body() != null) {
+                    onComplete(response.body(), null)
+                } else {
+                    onComplete(null, "Nenhum pull request encontrado")
+                }
+            }
+
+            override fun onFailure(call: Call<List<PullRequest>>, t: Throwable) {
                 onComplete(null, t.message)
             }
         })

@@ -11,10 +11,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.appgithub.R
 import com.example.appgithub.adapter.RepoListAdapter
 import com.example.appgithub.databinding.RepoListFragmentBinding
+import com.example.appgithub.interfaces.ClickableItem
 import com.example.appgithub.model.Repo
+import com.example.appgithub.model.RepoResponse
 import com.example.appgithub.viewmodel.RepoListViewModel
 
-class RepoListFragment : Fragment(R.layout.repo_list_fragment) {
+class RepoListFragment : Fragment(R.layout.repo_list_fragment),ClickableItem {
 
     companion object {
         fun newInstance() = RepoListFragment()
@@ -22,7 +24,7 @@ class RepoListFragment : Fragment(R.layout.repo_list_fragment) {
 
     private lateinit var viewModel: RepoListViewModel
     private lateinit var binding: RepoListFragmentBinding
-    private val adapter = RepoListAdapter()
+    private val adapter = RepoListAdapter(this)
 
     private val observerRepos = Observer<List<Repo>> { repos ->
         adapter.update(repos)
@@ -39,6 +41,24 @@ class RepoListFragment : Fragment(R.layout.repo_list_fragment) {
         viewModel.repo.observe(viewLifecycleOwner, observerRepos)
 
         viewModel.fetchAllFromServer(requireContext())
+
+    }
+
+    override fun onClickGoToDetail(repo: Repo) {
+        val bundle = Bundle()
+
+        bundle.putSerializable("repo", repo)
+
+        val fragment = PRFragment.newInstance()
+
+        fragment.arguments = bundle
+
+        requireActivity().supportFragmentManager
+            .beginTransaction()
+            .hide(this)
+            .add(R.id.container, fragment)
+            .addToBackStack("repos")
+            .commit()
 
     }
 

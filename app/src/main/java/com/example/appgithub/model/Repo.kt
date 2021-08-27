@@ -1,6 +1,7 @@
 package com.example.appgithub.model
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class Repo (
     val id: Int,
@@ -15,9 +16,10 @@ data class Repo (
     @SerializedName("forks_count")
     val forks: Int,
     @SerializedName("full_name")
-    val fullName: String
-) {
-}
+    val fullName: String,
+    @SerializedName("pulls_url")
+    val pullsUrl: String
+) : Serializable
 
 data class RepoResponse (
 
