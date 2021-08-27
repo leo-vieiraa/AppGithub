@@ -40,6 +40,10 @@ class RepoListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     fun bind(repoItem: Repo) {
 
         binding.nameTextView.text = repoItem.name
+        binding.descriptionTextView.text = repoItem.description
+        binding.ownerNameTextView.text = repoItem.owner.login
+        binding.starsTextView.text = repoItem.stars.toString()
+        binding.forksTextView.text = repoItem.forks.toString()
 
     }
 
