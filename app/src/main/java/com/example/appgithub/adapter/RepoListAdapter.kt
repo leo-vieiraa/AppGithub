@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.appgithub.R
 import com.example.appgithub.databinding.RepoItemFragmentBinding
 import com.example.appgithub.model.Repo
@@ -44,6 +45,12 @@ class RepoListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         binding.ownerNameTextView.text = repoItem.owner.login
         binding.starsTextView.text = repoItem.stars.toString()
         binding.forksTextView.text = repoItem.forks.toString()
+
+        repoItem.owner?.apply {
+            Glide.with(itemView.context)
+                .load(this.avatar)
+                .into(binding.avatarImageView)
+        }
 
     }
 
