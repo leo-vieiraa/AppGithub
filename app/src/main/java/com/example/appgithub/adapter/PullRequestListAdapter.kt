@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.appgithub.R
 import com.example.appgithub.databinding.PrItemFragmentBinding
 import com.example.appgithub.model.PullRequest
@@ -50,9 +51,12 @@ class PullRequestListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         binding.createdDateTextView.text = pullRequest.createdAt
         binding.contributorNameTextView.text = pullRequest.user.login
 
+        val radius = itemView.context.resources.getDimensionPixelSize(R.dimen.corner_radius)
         pullRequest.user.apply {
             Glide.with(itemView.context)
                 .load(this.avatar)
+                .transform(RoundedCorners(radius))
+                .placeholder(R.drawable.img)
                 .into(binding.avatarImageView)
         }
 
