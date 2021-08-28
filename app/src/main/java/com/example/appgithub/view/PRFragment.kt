@@ -1,8 +1,11 @@
 package com.example.appgithub.view
 
+import android.content.Intent
+import android.net.Uri
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.view.View
+import android.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,7 +25,10 @@ class PRFragment : Fragment(R.layout.pr_fragment) {
 
     private lateinit var viewModel: PRViewModel
     private lateinit var binding: PrFragmentBinding
-    private val adapter = PullRequestListAdapter()
+    private val adapter = PullRequestListAdapter { it ->
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(it.htmlUrl))
+        startActivity(browserIntent)
+    }
 
     private val observerPullRequest = Observer<List<PullRequest>> { pullRequest ->
         adapter.update(pullRequest)
@@ -42,6 +48,14 @@ class PRFragment : Fragment(R.layout.pr_fragment) {
         val url = arguments.pullsUrl.replace("https://api.github.com", "").replace("{/number}", "")
 
         viewModel.fetchPullRequest(url, requireContext())
+
+        binding.backButton.apply {
+            setOnClickListener{
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.container, RepoListFragment.newInstance())
+                    .commitNow()
+            }
+        }
 
     }
 

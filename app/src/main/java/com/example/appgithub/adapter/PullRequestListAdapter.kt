@@ -9,7 +9,9 @@ import com.example.appgithub.R
 import com.example.appgithub.databinding.PrItemFragmentBinding
 import com.example.appgithub.model.PullRequest
 
-class PullRequestListAdapter : RecyclerView.Adapter<PullRequestListViewHolder>() {
+class PullRequestListAdapter(
+    val closureClick: (PullRequest) -> Unit
+) : RecyclerView.Adapter<PullRequestListViewHolder>() {
 
     private val pullRequestList = mutableListOf<PullRequest>()
 
@@ -21,6 +23,9 @@ class PullRequestListAdapter : RecyclerView.Adapter<PullRequestListViewHolder>()
     override fun onBindViewHolder(holder: PullRequestListViewHolder, position: Int) {
         pullRequestList[position].apply {
             holder.bind(this)
+        }
+        holder.itemView.setOnClickListener {
+            closureClick(pullRequestList[position])
         }
     }
 
