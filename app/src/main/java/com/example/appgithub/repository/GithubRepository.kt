@@ -1,56 +1,37 @@
 package com.example.appgithub.repository
 
-import android.content.Context
 import com.example.appgithub.model.PullRequest
 import com.example.appgithub.model.RepoResponse
-import com.example.appgithub.service.RetrofitService
-import retrofit2.Call
-import retrofit2.Callback
+import com.example.appgithub.service.GithubService
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import retrofit2.Response
+import javax.inject.Inject
 
-class GithubRepository (private val context: Context){
+class GithubRepository @Inject constructor(
+    private val services: GithubService
+){
 
-    val service = RetrofitService.getGithubService()
-
-    fun fetchAll (onComplete: (RepoResponse?, String?) -> Unit) {
-
-        val call = service.getRepos()
-
-        call.enqueue(object : Callback<RepoResponse> {
-            override fun onResponse(call: Call<RepoResponse>, response: Response<RepoResponse>) {
-                if (response.body() != null) {
-                    onComplete(response.body(), null)
-                } else {
-                    onComplete(null, "Nenhum repositório encontrado")
-                }
-            }
-
-            override fun onFailure(call: Call<RepoResponse>, t: Throwable) {
-                onComplete(null, t.message)
-            }
-        })
-
+    suspend fun getRepositories(): Deferred<RepoResponse?> {
+        return CoroutineScope(Dispatchers.Default).async {
+            val response =
+                services.getRepos(language = "language:Kotlin", page = 1, sort = "stars")
+            processData(response)
+        }
     }
 
-    fun fetchPullRequest(url: String, onComplete: (List<PullRequest>?, String?) -> Unit) {
+    suspend fun getPullRequests(url: String) : Deferred<List<PullRequest>?> {
+        return CoroutineScope(Dispatchers.Default).async {
+            val response =
+                services.getPullRequest(url)
+            processData(response)
+        }
+    }
 
-        val call = service.getPullRequest(url)
-
-        call.enqueue(object : Callback<List<PullRequest>> {
-
-            override fun onResponse(call: Call<List<PullRequest>>, response: Response<List<PullRequest>>) {
-                if (response.body() != null) {
-                    onComplete(response.body(), null)
-                } else {
-                    onComplete(null, "Nenhum pull request encontrado")
-                }
-            }
-
-            override fun onFailure(call: Call<List<PullRequest>>, t: Throwable) {
-                onComplete(null, t.message)
-            }
-        })
-
+    private fun <T> processData(response: Response<T>): T? {
+        return if (response.isSuccessful) response.body() else null
     }
 
 }

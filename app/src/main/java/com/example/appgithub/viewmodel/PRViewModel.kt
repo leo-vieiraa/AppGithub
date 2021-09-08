@@ -1,14 +1,19 @@
 package com.example.appgithub.viewmodel
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.appgithub.model.PullRequest
-import com.example.appgithub.model.Repo
 import com.example.appgithub.repository.GithubRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PRViewModel : ViewModel() {
+@HiltViewModel
+class PRViewModel @Inject constructor(
+    private val repository: GithubRepository
+) : ViewModel() {
 
     val _pullRequest = MutableLiveData<List<PullRequest>>()
     val pullRequest : LiveData<List<PullRequest>> = _pullRequest
@@ -16,16 +21,10 @@ class PRViewModel : ViewModel() {
     val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
-    fun fetchPullRequest(url: String, context: Context) {
-        val repository = GithubRepository(context)
-
-        repository.fetchPullRequest(url) { response, error ->
-            response?.apply {
-                _pullRequest.value = this
-            }
-            error?.let {
-                _error.value = it
-            }
+    fun fetchPullRequest(url: String) {
+        viewModelScope.launch {
+            val responseModel = repository.getPullRequests(url).await()
+            println(responseModel)
         }
     }
 
