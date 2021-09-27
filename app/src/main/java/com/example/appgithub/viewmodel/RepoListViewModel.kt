@@ -1,13 +1,20 @@
 package com.example.appgithub.viewmodel
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.appgithub.model.Repo
+import com.example.appgithub.model.RepoResponse
 import com.example.appgithub.repository.GithubRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class RepoListViewModel : ViewModel() {
+@HiltViewModel
+class RepoListViewModel @Inject constructor(
+    private val repository: GithubRepository
+) : ViewModel() {
 
     val _repo = MutableLiveData<List<Repo>>()
     val repo : LiveData<List<Repo>> = _repo
@@ -15,17 +22,12 @@ class RepoListViewModel : ViewModel() {
     val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
-    fun fetchAllFromServer(context: Context) {
-        val repository = GithubRepository(context)
-
-        repository.fetchAll { response, error ->
-            response?.let {
-                _repo.value = it.results
+    fun getRepositories() {
+        viewModelScope.launch {
+            val responseModel = repository.getRepositories().await().let {
+                _repo.value = it?.results
             }
-            error?.let {
-                _error.value = it
-            }
+            println(responseModel)
         }
     }
-
 }

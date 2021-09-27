@@ -3,7 +3,9 @@ package com.example.appgithub.service
 import com.example.appgithub.model.PullRequest
 import com.example.appgithub.model.RepoResponse
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Query
 import retrofit2.http.Url
 
 interface GithubService {
@@ -11,10 +13,14 @@ interface GithubService {
     @GET("/search/repositories?q=language:Java&sort=stars&page=1")
     fun getRepos() : Call<RepoResponse>
 
-//    @GET("/repos/CyC2018/CS-Notes/pulls")
-//    fun getPullRequest() : Call<List<PullRequest>>
+    @GET("/search/repositories")
+    suspend fun getRepos(
+        @Query("q") language: String,
+        @Query("sort") sort: String,
+        @Query("page") page: Int
+    ) : Response<RepoResponse>
 
     @GET
-    fun getPullRequest(@Url url: String) : Call<List<PullRequest>>
+    suspend fun getPullRequest(@Url url: String) : Response<List<PullRequest>>
 
 }

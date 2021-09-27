@@ -11,7 +11,9 @@ import com.example.appgithub.adapter.RepoListAdapter
 import com.example.appgithub.databinding.RepoListFragmentBinding
 import com.example.appgithub.model.Repo
 import com.example.appgithub.viewmodel.RepoListViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class RepoListFragment : Fragment(R.layout.repo_list_fragment) {
 
     companion object {
@@ -50,7 +52,7 @@ class RepoListFragment : Fragment(R.layout.repo_list_fragment) {
         viewModel = ViewModelProvider(this).get(RepoListViewModel::class.java)
         viewModel.repo.observe(viewLifecycleOwner, observerRepos)
 
-        viewModel.fetchAllFromServer(requireContext())
+        viewModel.getRepositories()
 
     }
 

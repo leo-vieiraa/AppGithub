@@ -16,7 +16,9 @@ import com.example.appgithub.databinding.PrItemFragmentBinding
 import com.example.appgithub.model.PullRequest
 import com.example.appgithub.model.Repo
 import com.example.appgithub.viewmodel.PRViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class PRFragment : Fragment(R.layout.pr_fragment) {
 
     companion object {
@@ -47,7 +49,7 @@ class PRFragment : Fragment(R.layout.pr_fragment) {
         val arguments = arguments?.getSerializable("repo") as Repo
         val url = arguments.pullsUrl.replace("https://api.github.com", "").replace("{/number}", "")
 
-        viewModel.fetchPullRequest(url, requireContext())
+        viewModel.fetchPullRequest(url)
 
         binding.backButton.apply {
             setOnClickListener{
